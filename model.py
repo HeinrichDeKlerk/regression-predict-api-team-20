@@ -67,13 +67,14 @@ def _preprocess_data(data):
                              'Pickup_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Time','Confirmation_-_Time','Placement_-_Time',
                              'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
     
-    df_with_dummy_value = pd.get_dummies(X, drop_first=True)
-    df_with_dummy_value = pd.concat([df_with_dummy_value, pd.get_dummies(df_with_dummy_value['Platform_Type'], prefix='Platform', drop_first=True)], axis=1)
-    df_with_dummy_value.drop(['Platform_Type'], axis=1, inplace = True)
+    df1 = X
+    #Encode Personal or Business
+    df1.replace(to_replace='Business', value=1, inplace=True)
+    df1.replace(to_replace='Personal', value=0, inplace=True)
 
-    column_titles = [column for column in df_with_dummy_value.columns if column !=
+    column_titles = [column for column in df1.columns if column !=
                  'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
-    df_with_dummy_value = df_with_dummy_value.reindex(columns=column_titles)
+    df1 = df1.reindex(columns=column_titles)
     # split data into predictors and response, response does not need to be scaled
     X_independent = df_with_dummy_value.drop('Time_from_Pickup_to_Arrival', axis=1)
     
