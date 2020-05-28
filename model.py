@@ -62,30 +62,24 @@ def _preprocess_data(data):
     train_rider_df = feature_vector_df
     train_rider_df['Temperature'].fillna(value=train_rider_df['Temperature'].mean(),inplace = True)
     train_rider_df.columns = [col.replace(" ","_") for col in train_rider_df.columns]
-    X = train_rider_df.drop(['Precipitation_in_millimeters','Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
-                             'Confirmation_-_Weekday_(Mo_=_1)','Pickup_-_Day_of_Month','Vehicle_Type','User_Id','Order_No','Pickup_-_Time',
-                             'Pickup_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Time','Confirmation_-_Time','Placement_-_Time',
-                             'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
-    
-    df1 = X
-    #Encode Personal or Business
-    df1.replace(to_replace='Business', value=1, inplace=True)
-    df1.replace(to_replace='Personal', value=0, inplace=True)
 
-    column_titles = [column for column in df1.columns if column !=
-                 'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
-    df1 = df1.reindex(columns=column_titles)
-    # split data into predictors and response, response does not need to be scaled
-    X_independent = df1.drop('Time_from_Pickup_to_Arrival', axis=1)
-    
+    #Encode Personal or Business
+    train_rider_df.replace(to_replace='Business', value=1, inplace=True)
+    train_rider_df.replace(to_replace='Personal', value=0, inplace=True)
+
+    feature_sel_df = train_rider_df[['Platform_Type', 'Personal_or_Business',
+       'Arrival_at_Pickup_-_Weekday_(Mo_=_1)', 'Distance_(KM)', 'Temperature',
+       'Pickup_Lat', 'Pickup_Long', 'Destination_Lat', 'Destination_Long',
+       'No_Of_Orders', 'Age', 'Average_Rating', 'No_of_Ratings']]
+
     # import scaler method from sklearn
     from sklearn.preprocessing import StandardScaler
     # create scaler object
     scaler = StandardScaler() 
-    scaled = scaler.fit_transform(X_independent)
+    scaled = scaler.fit_transform(feature_sel_df)
     #convert scaled values into dataframe
-    standardised_X = pd.DataFrame(scaled,columns=X_independent.columns)
-    predict_vector = standardised_X
+    feature_sel_df = pd.DataFrame(scaled,columns=feature_sel_df.columns)
+    predict_vector = feature_sel_df
     # ------------------------------------------------------------------------
 
     return predict_vector
