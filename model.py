@@ -60,22 +60,20 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
     feature_vector_df = train_rider_df
+    train_rider_df['Temperature'].fillna(value=dft['Temperature'].mean(),inplace = True)
     train_rider_df.columns = [col.replace(" ","_") for col in train_rider_df.columns]
-    
     X = train_rider_df.drop(['Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
-                             'Confirmation_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Day_of_Month','Arrival_at_Destination_-_Weekday_(Mo_=_1)',
-                             'Pickup_-_Day_of_Month','Arrival_at_Destination_-_Time','Vehicle_Type','User_Id','Order_No','Pickup_-_Time',
-                             'Pickup_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Time','Confirmation_-_Time','Placement_-_Time'], axis=1)
+                             'Confirmation_-_Weekday_(Mo_=_1)','Pickup_-_Day_of_Month','Vehicle_Type','User_Id','Order_No','Pickup_-_Time',
+                             'Pickup_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Time','Confirmation_-_Time','Placement_-_Time',
+                             'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
     
     df_with_dummy_value = pd.get_dummies(X, drop_first=True)
     df_with_dummy_value[['Platform_1','Platform_2','Platform_3']] = pd.get_dummies(df_with_dummy_value['Platform_Type'], drop_first=True)
-    
+    df_with_dummy_value = df_with_dummy_value.drop(['Platform_Type'], axis=1)
     # Reorder columns with the dependent variable Time_from_Pickup_to_Arrival the last column
     column_titles = [column for column in df_with_dummy_value.columns if column != 
                      'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
     df_with_dummy_value = df_with_dummy_value.reindex(columns=column_titles)
-    df_with_dummy_value = df_with_dummy_value.drop(['Platform_Type','Arrival_at_Pickup_-_Weekday_(Mo_=_1)',
-                                                    'Arrival_at_Destination_-_Day_of_Month'], axis = 1)
     # split data into predictors and response, response does not need to be scaled
     X_independent = df_with_dummy_value.drop('Time_from_Pickup_to_Arrival', axis=1)
     # import scaler method from sklearn
