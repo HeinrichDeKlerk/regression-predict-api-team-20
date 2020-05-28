@@ -70,7 +70,7 @@ def _preprocess_data(data):
     df_with_dummy_value = pd.get_dummies(X, drop_first=True)
     df_with_dummy_value = pd.concat([df_with_dummy_value, pd.get_dummies(df_with_dummy_value['Platform_Type'], prefix='Platform', drop_first=False)], axis=1)
     df_with_dummy_value.drop(['Platform_Type'], axis=1, inplace = True)
-    df_with_dummy_value.drop(['Platform_4'], axis=1, inplace = True)
+    del df_with_dummy_values['Platform_4']
     column_titles = [column for column in df_with_dummy_value.columns if column !=
                  'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
     df_with_dummy_value = df_with_dummy_value.reindex(columns=column_titles)
