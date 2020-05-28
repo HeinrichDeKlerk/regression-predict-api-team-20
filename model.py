@@ -59,8 +59,8 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    train_rider_df = feature_vector_df
-    train_rider_df['Temperature'].fillna(value=train_rider_df['Temperature'].mean(),inplace = True)
+    feature_vector_df = train_rider_df
+    train_rider_df['Temperature'].fillna(value=dft['Temperature'].mean(),inplace = True)
     train_rider_df.columns = [col.replace(" ","_") for col in train_rider_df.columns]
     X = train_rider_df.drop(['Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
                              'Confirmation_-_Weekday_(Mo_=_1)','Pickup_-_Day_of_Month','Vehicle_Type','User_Id','Order_No','Pickup_-_Time',
@@ -68,15 +68,15 @@ def _preprocess_data(data):
                              'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
     
     df_with_dummy_value = pd.get_dummies(X, drop_first=True)
-    df_with_dummy_value = pd.concat([df_with_dummy_value, pd.get_dummies(df_with_dummy_value['Platform_Type'], prefix='Platform', drop_first=False)], axis=1)
+    df_with_dummy_value = pd.concat([df_with_dummy_value, pd.get_dummies(df_with_dummy_value['Platform_Type'], prefix='Platform', drop_first=True)], axis=1)
     df_with_dummy_value.drop(['Platform_Type'], axis=1, inplace = True)
-    del df_with_dummy_value['Platform_4']
+
     column_titles = [column for column in df_with_dummy_value.columns if column !=
                  'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
     df_with_dummy_value = df_with_dummy_value.reindex(columns=column_titles)
-    df_with_dummy_value = df_with_dummy_value.drop(['Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis = 1)
     # split data into predictors and response, response does not need to be scaled
     X_independent = df_with_dummy_value.drop('Time_from_Pickup_to_Arrival', axis=1)
+    
     # import scaler method from sklearn
     from sklearn.preprocessing import StandardScaler
     # create scaler object
