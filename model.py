@@ -76,7 +76,7 @@ def _preprocess_data(data):
                  'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
     df1 = df1.reindex(columns=column_titles)
     # split data into predictors and response, response does not need to be scaled
-    X_independent = df_with_dummy_value.drop('Time_from_Pickup_to_Arrival', axis=1)
+    X_independent = df1.drop('Time_from_Pickup_to_Arrival', axis=1)
     
     # import scaler method from sklearn
     from sklearn.preprocessing import StandardScaler
