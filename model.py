@@ -68,12 +68,12 @@ def _preprocess_data(data):
                              'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
     
     df_with_dummy_value = pd.get_dummies(X, drop_first=True)
-    df_with_dummy_value[['Platform_1','Platform_2','Platform_3']] = pd.get_dummies(df_with_dummy_value['Platform_Type'], drop_first=True)
-    df_with_dummy_value = df_with_dummy_value.drop(['Platform_Type'], axis=1)
-    # Reorder columns with the dependent variable Time_from_Pickup_to_Arrival the last column
-    column_titles = [column for column in df_with_dummy_value.columns if column != 
-                     'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
+    df_with_dummy_value = pd.concat([df_with_dummy_value, pd.get_dummies(df_with_dummy_value['Platform_Type'], prefix='Platform', drop_first=False)], axis=1)
+    df_with_dummy_value.drop(['Platform_Type','Platform_4'], axis=1, inplace = True)
+    column_titles = [column for column in df_with_dummy_value.columns if column !=
+                 'Time_from_Pickup_to_Arrival'] + ['Time_from_Pickup_to_Arrival']
     df_with_dummy_value = df_with_dummy_value.reindex(columns=column_titles)
+    df_with_dummy_value = df_with_dummy_value.drop(['Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis = 1)
     # split data into predictors and response, response does not need to be scaled
     X_independent = df_with_dummy_value.drop('Time_from_Pickup_to_Arrival', axis=1)
     # import scaler method from sklearn
