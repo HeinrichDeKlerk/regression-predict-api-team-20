@@ -59,7 +59,7 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    feature_vector_df = train_rider_df
+    train_rider_df = feature_vector_df
     train_rider_df['Temperature'].fillna(value=dft['Temperature'].mean(),inplace = True)
     train_rider_df.columns = [col.replace(" ","_") for col in train_rider_df.columns]
     X = train_rider_df.drop(['Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
