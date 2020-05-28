@@ -60,9 +60,9 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
     train_rider_df = feature_vector_df
-    train_rider_df['Temperature'].fillna(value=dft['Temperature'].mean(),inplace = True)
+    train_rider_df['Temperature'].fillna(value=train_rider_df['Temperature'].mean(),inplace = True)
     train_rider_df.columns = [col.replace(" ","_") for col in train_rider_df.columns]
-    X = train_rider_df.drop(['Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
+    X = train_rider_df.drop(['Precipitation_in_millimeters','Rider_Id','Placement_-_Day_of_Month','Placement_-_Weekday_(Mo_=_1)','Confirmation_-_Day_of_Month',
                              'Confirmation_-_Weekday_(Mo_=_1)','Pickup_-_Day_of_Month','Vehicle_Type','User_Id','Order_No','Pickup_-_Time',
                              'Pickup_-_Weekday_(Mo_=_1)','Arrival_at_Pickup_-_Time','Confirmation_-_Time','Placement_-_Time',
                              'Arrival_at_Pickup_-_Day_of_Month', 'Arrival_at_Pickup_-_Weekday_(Mo_=_1)'], axis=1)
