@@ -72,13 +72,6 @@ def _preprocess_data(data):
        'Pickup_Lat', 'Pickup_Long', 'Destination_Lat', 'Destination_Long',
        'No_Of_Orders', 'Age', 'Average_Rating', 'No_of_Ratings']]
 
-    # import scaler method from sklearn
-    from sklearn.preprocessing import StandardScaler
-    # create scaler object
-    scaler = StandardScaler() 
-    scaled = scaler.fit_transform(feature_sel_df)
-    #convert scaled values into dataframe
-    feature_sel_df = pd.DataFrame(scaled,columns=feature_sel_df.columns)
     predict_vector = feature_sel_df
     # ------------------------------------------------------------------------
 
